@@ -7,7 +7,10 @@ import { LandingPage, NotFoundPage } from './pages'
 const router = createBrowserRouter([
   {
     element: <BasicLayout />,
-    children: [{ path: ROUTES.LandingPage, element: <LandingPage /> }],
+    children: [
+      { path: ROUTES.LandingPage, element: <LandingPage /> },
+      { path: ROUTES.UploadPage, element: <LandingPage /> },
+    ],
     errorElement: <NotFoundPage />,
   },
 ])
