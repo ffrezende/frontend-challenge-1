@@ -1,5 +1,7 @@
 import { useNavigate } from 'react-router-dom'
-import { ROUTES } from '../constants'
+
+import { ROUTES, SessionManagement } from '../../common/constants'
+import { addSessionStorage, removeSessionStorage } from '~/utils/sessionStorage'
 import useGlobalStore from '~/stores'
 
 export default function useSession() {
@@ -8,11 +10,13 @@ export default function useSession() {
 
   const login = () => {
     setAuth({ isAuthenticated: true })
+    addSessionStorage(SessionManagement.AuthToken, 'Bearer Example')
     navigate(ROUTES.UploadPage)
   }
 
   const logout = () => {
     setAuth({ isAuthenticated: false })
+    removeSessionStorage(SessionManagement.AuthToken)
     navigate(ROUTES.LandingPage)
   }
 

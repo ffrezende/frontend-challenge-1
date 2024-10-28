@@ -1,6 +1,6 @@
 import { Group, Text, Button } from '@mantine/core'
 import { useMantineTheme } from '@mantine/core'
-import useSession from '~/common/hooks/useSession'
+import useSession from '~/utils/hooks/useSession'
 
 import useGlobalStore from '~/stores'
 
