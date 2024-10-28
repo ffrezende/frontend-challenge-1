@@ -15,3 +15,7 @@
     letter-spacing: -0.5px;
   }
 }
+
+.container {
+  @apply flex w-full p-8;
+}

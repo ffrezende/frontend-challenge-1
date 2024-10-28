@@ -1,9 +1,11 @@
-import { Outlet } from "react-router-dom";
+import { Outlet } from 'react-router-dom'
+
+import { Container } from '../layout'
 
 export default function BasicLayout() {
   return (
-    <div className="h-screen w-full">
+    <Container>
       <Outlet />
-    </div>
-  );
+    </Container>
+  )
 }
