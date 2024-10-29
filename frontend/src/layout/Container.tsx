@@ -1,10 +1,10 @@
-import { Group, Text, Button } from '@mantine/core'
+import { Group, Text, Button, Container } from '@mantine/core'
 import { useMantineTheme } from '@mantine/core'
 import useSession from '~/utils/hooks/useSession'
 
 import useGlobalStore from '~/stores'
 
-export default function Container({ children }) {
+export default function ContainerLayout({ children }) {
   const theme = useMantineTheme()
   const { app, auth } = useGlobalStore()
   const { logout } = useSession()
@@ -24,7 +24,7 @@ export default function Container({ children }) {
         )}
       </Group>
 
-      <div className="container">{children}</div>
+      <Container p={40}>{children}</Container>
 
       <footer className="flex justify-center items-center h-10 fixed bottom-0 left-0 right-0">
         <Group bg={theme.colors.royalGreen[0]} w={'100%'} h={40} justify="center">

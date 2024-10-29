@@ -2,7 +2,7 @@ import { createBrowserRouter } from 'react-router-dom'
 
 import { BasicLayout } from './layout'
 import { ROUTES, SessionManagement } from './common/constants'
-import { LandingPage, NotFoundPage } from './pages'
+import { LandingPage, NotFoundPage, UploadPage } from './pages'
 
 import { ReactNode, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -31,6 +31,7 @@ export const ProtectedRoute = ({ children }: Props): React.ReactElement => {
     }
   }, [isAuthenticated])
 
+  //TODO: create a not authorized page
   return <>{isAuthenticated && children}</>
 }
 
@@ -41,11 +42,7 @@ const router = createBrowserRouter([
       { path: ROUTES.LandingPage, element: <LandingPage /> },
       {
         path: ROUTES.UploadPage,
-        element: (
-          <ProtectedRoute>
-            <LandingPage />
-          </ProtectedRoute>
-        ),
+        element: <UploadPage />,
       },
     ],
     errorElement: <NotFoundPage />,
