@@ -2,7 +2,7 @@ import { createBrowserRouter } from 'react-router-dom'
 
 import { BasicLayout } from './layout'
 import { ROUTES, SessionManagement } from './common/constants'
-import { LandingPage, NotFoundPage, UploadPage } from './pages'
+import { ClaimsFilePage, LandingPage, NotFoundPage, UploadPage } from './pages'
 
 import { ReactNode, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -21,6 +21,7 @@ export const ProtectedRoute = ({ children }: Props): React.ReactElement => {
   } = useGlobalStore()
 
   useEffect(() => {
+    //TODO: mobx is not persist when F5, create validation with mobx persist
     if (!isAuthenticated) {
       const authToken = getSessionStorage(SessionManagement.AuthToken)
       if (!!authToken) {
@@ -42,7 +43,19 @@ const router = createBrowserRouter([
       { path: ROUTES.LandingPage, element: <LandingPage /> },
       {
         path: ROUTES.UploadPage,
-        element: <UploadPage />,
+        element: (
+          <ProtectedRoute>
+            <UploadPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: ROUTES.ClaimsFiles,
+        element: (
+          <ProtectedRoute>
+            <ClaimsFilePage />
+          </ProtectedRoute>
+        ),
       },
     ],
     errorElement: <NotFoundPage />,

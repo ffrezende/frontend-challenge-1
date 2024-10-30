@@ -3,19 +3,22 @@ import { useMantineTheme } from '@mantine/core'
 import useSession from '~/utils/hooks/useSession'
 
 import useGlobalStore from '~/stores'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ROUTES } from '~/common/constants'
 import { useNavigate } from 'react-router-dom'
 
 export default function ContainerLayout({ children }) {
   const { colors } = useMantineTheme()
-  const { app, auth } = useGlobalStore()
+  const {
+    app,
+    auth: { isAuthenticated },
+  } = useGlobalStore()
   const { logout } = useSession()
   const navigate = useNavigate()
 
   const links = [
     { link: ROUTES.UploadPage, label: 'Upload' },
-    { link: ROUTES.ListFiles, label: 'List of Files' },
+    { link: ROUTES.ClaimsFiles, label: 'Claims Files' },
   ]
   const [active, setActive] = useState(links[0].link)
 
@@ -46,7 +49,7 @@ export default function ContainerLayout({ children }) {
           </Text>
         </Group>
 
-        {auth.isAuthenticated && (
+        {isAuthenticated && (
           <div className="flex justify-center items-center">
             <Group gap={5} visibleFrom="xs">
               {items}

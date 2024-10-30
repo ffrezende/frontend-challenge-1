@@ -1,7 +1,7 @@
 export const ROUTES = {
   LandingPage: '/',
   UploadPage: '/upload',
-  ListFiles: '/list-files',
+  ClaimsFiles: '/claims-files',
 }
 
 export const SessionManagement = {
