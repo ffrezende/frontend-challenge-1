@@ -4,6 +4,7 @@ import * as Papa from 'papaparse'
 import { useState } from 'react'
 import { csvHeaderSchema, csvRowSchema } from '~/utils/zod/schema'
 import { TableHeader } from '~/common/constants'
+import useGlobalStore from '~/stores'
 
 //TODO create interface for csv headers
 interface Props {
@@ -13,6 +14,7 @@ interface Props {
 const FileUpload = ({ onChange }: Props) => {
   const { colors } = useMantineTheme()
   const [currentFile, setCurrentFile] = useState()
+  const { setUploadFile } = useGlobalStore()
 
   const form = useForm({
     initialValues: {
@@ -21,45 +23,51 @@ const FileUpload = ({ onChange }: Props) => {
   })
 
   const onChangeFile = (file) => {
-    if (!file) {
-      console.error('No file selected')
-      return
-    }
-    setCurrentFile(file)
-    const reader = new FileReader()
-
-    reader.onload = (e) => {
-      const csvData = e.target?.result
-      const { data, errors } = Papa.parse(csvData, { skipEmptyLines: true })
-
-      const headers = data?.shift()
-      const { success, error } = csvHeaderSchema(headers)
-
-      if (!success) {
-        //create validation
+    try {
+      setUploadFile(true)
+      if (!file) {
+        console.error('No file selected')
+        return
       }
+      setCurrentFile(file)
+      const reader = new FileReader()
 
-      const tableHeader = TableHeader()
-      const rowByCollumn = []
+      reader.onload = (e) => {
+        const csvData = e.target?.result
+        const { data, errors } = Papa.parse(csvData, { skipEmptyLines: true })
 
-      data.forEach((row) => {
-        const tempRow = {}
+        const headers = data?.shift()
+        const { success, error } = csvHeaderSchema(headers)
 
-        row.forEach((element, index) => {
-          const { field } = tableHeader[index]
-          tempRow[field] = element
+        if (!success) {
+          //create validation
+        }
+
+        const tableHeader = TableHeader()
+        const rowByCollumn = []
+
+        data.forEach((row) => {
+          const tempRow = {}
+
+          row.forEach((element, index) => {
+            const { field } = tableHeader[index]
+            tempRow[field] = element
+          })
+
+          const validationResult = csvRowSchema.safeParse(tempRow)
+
+          //create validation
+          rowByCollumn.push(tempRow)
         })
 
-        const validationResult = csvRowSchema.safeParse(tempRow)
+        onChange({ rows: rowByCollumn })
+        setUploadFile(false)
+      }
 
-        //create validation
-        rowByCollumn.push(tempRow)
-      })
-
-      onChange({ rows: rowByCollumn })
+      reader.readAsText(file)
+    } catch (error) {
+      console.log(error)
     }
-
-    reader.readAsText(file)
   }
 
   return (

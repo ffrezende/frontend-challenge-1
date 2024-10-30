@@ -4,6 +4,7 @@ import { useObserver } from 'mobx-react-lite'
 class GlobalStore {
   app = {
     name: 'Machine Readble',
+    isFileUploading: false,
   }
   auth = {
     isAuthenticated: false,
@@ -12,10 +13,15 @@ class GlobalStore {
   constructor() {
     makeAutoObservable(this)
     this.setAuth = this.setAuth.bind(this)
+    this.setUploadFile = this.setUploadFile.bind(this)
   }
 
   setAuth(auth) {
     this.auth = { ...this.auth, ...auth }
+  }
+
+  setUploadFile(isLoading) {
+    this.app = { ...this.app, isFileUploading: isLoading }
   }
 }
 
