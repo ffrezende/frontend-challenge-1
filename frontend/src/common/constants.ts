@@ -1,6 +1,7 @@
 export const ROUTES = {
   LandingPage: '/',
   UploadPage: '/upload',
+  ListFiles: '/list-files',
 }
 
 export const SessionManagement = {
