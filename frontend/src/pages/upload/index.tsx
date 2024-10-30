@@ -11,7 +11,7 @@ import useFileManagement from '~/utils/hooks/useFileManagement'
 export default function UploadPage() {
   const [rowData, setRowData] = useState([])
 
-  const { createCSVString, formDataCSV } = useFileManagement()
+  const { handleSubmitFile } = useFileManagement()
 
   const {
     app: { isFileUploading },
@@ -23,9 +23,8 @@ export default function UploadPage() {
     setRowData(rows)
   }
 
-  const handleSubmit = () => {
-    const csvString = createCSVString(CSVHeaders, rowData)
-    const csvFile = formDataCSV(csvString)
+  const handleSubmit = async () => {
+    await handleSubmitFile(CSVHeaders, rowData)
   }
 
   return (

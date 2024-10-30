@@ -22,5 +22,10 @@ export default function useFileManagement() {
     return formData
   }
 
-  return { createCSVString, formDataCSV }
+  const handleSubmitFile = async (headers, rows) => {
+    const csvString = createCSVString(headers, rows)
+    const csvFile = formDataCSV(csvString)
+  }
+
+  return { handleSubmitFile }
 }
