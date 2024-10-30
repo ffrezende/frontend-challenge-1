@@ -28,7 +28,7 @@ app.post('/upload', async (c) => {
       if (err) throw err
     })
 
-    return c.text('CSV file uploaded successfully!')
+    return c.json({ message: 'CSV file uploaded successfully!' })
   } catch (error) {
     console.error(error)
     return c.text('Error uploading file.', 500)

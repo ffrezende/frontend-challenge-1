@@ -1,3 +1,4 @@
+import { postCsvFile } from '~/service'
 import useGlobalStore from '~/stores'
 
 export default function useFileManagement() {
@@ -26,23 +27,7 @@ export default function useFileManagement() {
     const csvString = createCSVString(headers, rows)
     const csvFile = formDataCSV(csvString)
 
-    fetch('http://127.0.0.1:8080/upload', {
-      method: 'POST',
-      body: csvFile,
-    })
-      .then((response) => {
-        debugger
-        if (!response.ok) {
-          throw new Error('Network response was not ok')
-        }
-        return response.json()
-      })
-      .then((data) => {
-        console.log('CSV uploaded successfully:', data)
-      })
-      .catch((error) => {
-        console.error('Error uploading CSV:', error)
-      })
+    const { message } = await postCsvFile(csvFile)
   }
 
   return { handleSubmitFile }
