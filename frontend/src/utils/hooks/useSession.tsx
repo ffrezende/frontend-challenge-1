@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 
 import { ROUTES, SessionManagement } from '../../common/constants'
-import { addSessionStorage, removeSessionStorage } from '~/utils/sessionStorage'
+import { addSessionStorage, removeSessionStorage } from '~/utils/session/sessionStorage'
 import useGlobalStore from '~/stores'
 
 export default function useSession() {

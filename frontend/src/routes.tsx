@@ -7,7 +7,7 @@ import { ClaimsFilePage, LandingPage, NotFoundPage, UploadPage } from './pages'
 import { ReactNode, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import useGlobalStore from './stores'
-import { getSessionStorage } from './utils/sessionStorage'
+import { getSessionStorage } from './utils/session/sessionStorage'
 
 interface Props {
   children: ReactNode
