@@ -24,7 +24,7 @@ const FileUpload = ({ onChange }: Props) => {
 
   const onChangeFile = (file) => {
     try {
-      setUploadFile(true)
+      setUploadFile({ isFileUploading: true, fileName: file?.name })
       if (!file) {
         console.error('No file selected')
         return
@@ -61,7 +61,7 @@ const FileUpload = ({ onChange }: Props) => {
         })
 
         onChange({ rows: rowByCollumn })
-        setUploadFile(false)
+        setUploadFile({ isFileUploading: false })
       }
 
       reader.readAsText(file)

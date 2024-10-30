@@ -1,14 +1,18 @@
-import { Group, LoadingOverlay } from '@mantine/core'
+import { Button, Group, LoadingOverlay } from '@mantine/core'
 import { FileInput } from '../../layout'
 import { useState } from 'react'
 import { AgGridReact } from 'ag-grid-react'
 import 'ag-grid-community/styles/ag-grid.css'
 import 'ag-grid-community/styles/ag-theme-alpine.css'
-import { TableHeader } from '~/common/constants'
+import { CSVHeaders, TableHeader } from '~/common/constants'
 import useGlobalStore from '~/stores'
+import useFileManagement from '~/utils/hooks/useFileManagement'
 
 export default function UploadPage() {
   const [rowData, setRowData] = useState([])
+
+  const { createCSVString, formDataCSV } = useFileManagement()
+
   const {
     app: { isFileUploading },
   } = useGlobalStore()
@@ -17,6 +21,11 @@ export default function UploadPage() {
   const handleOnChange = (values) => {
     const { rows } = values
     setRowData(rows)
+  }
+
+  const handleSubmit = () => {
+    const csvString = createCSVString(CSVHeaders, rowData)
+    const csvFile = formDataCSV(csvString)
   }
 
   return (
@@ -29,14 +38,19 @@ export default function UploadPage() {
         <LoadingOverlay visible={isFileUploading} zIndex={1000} overlayProps={{ radius: 'sm', blur: 2 }} />
 
         {!!rowData.length && (
-          <AgGridReact
-            rowData={rowData}
-            columnDefs={headers}
-            defaultColDef={{
-              sortable: true,
-              filter: true,
-            }}
-          />
+          <>
+            <AgGridReact
+              rowData={rowData}
+              columnDefs={headers}
+              defaultColDef={{
+                sortable: true,
+                filter: true,
+              }}
+            />
+            <Button onClick={handleSubmit} variant="outline">
+              Submit
+            </Button>
+          </>
         )}
       </div>
     </Group>

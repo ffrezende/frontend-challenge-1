@@ -5,6 +5,7 @@ class GlobalStore {
   app = {
     name: 'Machine Readble',
     isFileUploading: false,
+    fileName: '',
   }
   auth = {
     isAuthenticated: false,
@@ -20,8 +21,8 @@ class GlobalStore {
     this.auth = { ...this.auth, ...auth }
   }
 
-  setUploadFile(isLoading) {
-    this.app = { ...this.app, isFileUploading: isLoading }
+  setUploadFile(upload) {
+    this.app = { ...this.app, ...upload }
   }
 }
 
