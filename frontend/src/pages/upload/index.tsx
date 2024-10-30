@@ -4,14 +4,14 @@ import { useState } from 'react'
 import { AgGridReact } from 'ag-grid-react'
 import 'ag-grid-community/styles/ag-grid.css'
 import 'ag-grid-community/styles/ag-theme-alpine.css'
+import { TableHeader } from '~/common/constants'
 
 export default function UploadPage() {
   const [rowData, setRowData] = useState([])
-  const [headers, setHeaders] = useState([])
+  const headers = TableHeader()
 
   const handleOnChange = (values) => {
-    const { headers, rows } = values
-    setHeaders(headers)
+    const { rows } = values
     setRowData(rows)
   }
 

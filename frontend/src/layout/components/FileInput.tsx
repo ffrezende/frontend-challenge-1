@@ -2,10 +2,12 @@ import { useForm } from '@mantine/form'
 import { FileInput, Container, Group, useMantineTheme } from '@mantine/core'
 import * as Papa from 'papaparse'
 import { useState } from 'react'
+import { csvHeaderSchema, csvRowSchema } from '~/utils/zod/schema'
+import { TableHeader } from '~/common/constants'
 
 //TODO create interface for csv headers
 interface Props {
-  onChange: ({ headers, rows }) => any
+  onChange: ({ rows }) => any
 }
 
 const FileUpload = ({ onChange }: Props) => {
@@ -28,23 +30,33 @@ const FileUpload = ({ onChange }: Props) => {
 
     reader.onload = (e) => {
       const csvData = e.target?.result
-      const { data } = Papa.parse(csvData, { skipEmptyLines: true })
+      const { data, errors } = Papa.parse(csvData, { skipEmptyLines: true })
 
       const headers = data?.shift()
-      const tempHeader = headers.map((header) => ({ field: header, sortable: true, filter: true }))
+      const { success, error } = csvHeaderSchema(headers)
+
+      if (!success) {
+        //create validation
+      }
+
+      const tableHeader = TableHeader()
       const rowByCollumn = []
 
       data.forEach((row) => {
         const tempRow = {}
+
         row.forEach((element, index) => {
-          const { field } = tempHeader[index]
+          const { field } = tableHeader[index]
           tempRow[field] = element
         })
 
+        const validationResult = csvRowSchema.safeParse(tempRow)
+
+        //create validation
         rowByCollumn.push(tempRow)
       })
 
-      onChange({ headers: tempHeader, rows: rowByCollumn })
+      onChange({ rows: rowByCollumn })
     }
 
     reader.readAsText(file)
