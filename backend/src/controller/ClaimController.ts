@@ -1,34 +1,35 @@
 import type { Context } from 'hono'
-import { readdir } from 'fs/promises'
-import { readFileSync } from 'fs'
 
-import { UPLOAD_FOLDER } from '../common/constants/index.js'
-import { generateMRF, saveFile } from '../utils/index.js'
+import ClaimService from '../service/ClaimService.js'
 
 class ClaimController {
+  claimService: ClaimService
+
+  constructor() {
+    this.claimService = new ClaimService()
+  }
+
   getListOfClaims = async (c: Context) => {
     try {
-      const files = await readdir(UPLOAD_FOLDER)
+      const files = await this.claimService.getListOfClaims()
 
       return c.json({ files })
-    } catch (error) {
-      console.error(error)
-      return c.text('Error retrieving file list.', 500)
+    } catch (error: any) {
+      const { message, status } = error
+      return c.text(message, status)
     }
   }
 
   getClaimByName = async (c: Context) => {
     const filename = c.req.param('filename')
-    const filePath = `./uploads/${filename}` // Adjust the path as needed
 
     try {
-      const fileContent = readFileSync(filePath, 'utf8')
-      const jsonData = JSON.parse(fileContent)
+      const jsonData = this.claimService.getClaimByName(filename)
 
       return c.json(jsonData)
-    } catch (error) {
-      console.error(error)
-      return c.text('Error reading file', 500)
+    } catch (error: any) {
+      const { message, status } = error
+      return c.text(message, status)
     }
   }
 
@@ -41,15 +42,12 @@ class ClaimController {
         return c.text('No file uploaded.', 400)
       }
 
-      const OONRates = await generateMRF(file)
-      const jsonString = JSON.stringify(OONRates)
+      const response = this.claimService.uploadClaimFile(file)
 
-      await saveFile(file.name, jsonString)
-
-      return c.json({ message: 'CSV file uploaded successfully!' })
-    } catch (error) {
-      console.error(error)
-      return c.text('Error uploading file.', 500)
+      return c.json(response)
+    } catch (error: any) {
+      const { message, status } = error
+      return c.text(message, status)
     }
   }
 }
