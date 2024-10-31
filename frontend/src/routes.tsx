@@ -8,6 +8,7 @@ import { ReactNode, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import useGlobalStore from './stores'
 import { getSessionStorage } from './utils/session/sessionStorage'
+import NotAuthorizedPage from './pages/error/NotAuthorized'
 
 interface Props {
   children: ReactNode
@@ -27,12 +28,11 @@ export const ProtectedRoute = ({ children }: Props): React.ReactElement => {
       if (!!authToken) {
         setAuth({ isAuthenticated: true })
       } else {
-        navigate(ROUTES.LandingPage)
+        navigate(ROUTES.NotAuthorized)
       }
     }
   }, [isAuthenticated])
 
-  //TODO: create a not authorized page
   return <>{isAuthenticated && children}</>
 }
 
@@ -52,6 +52,10 @@ const router = createBrowserRouter([
       {
         path: ROUTES.ClaimsFiles,
         element: <ClaimsFilePage />,
+      },
+      {
+        path: ROUTES.NotAuthorized,
+        element: <NotAuthorizedPage />,
       },
     ],
     errorElement: <NotFoundPage />,

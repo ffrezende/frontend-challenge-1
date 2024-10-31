@@ -4,6 +4,7 @@ export const ROUTES = {
   LandingPage: '/',
   UploadPage: '/upload',
   ClaimsFiles: '/claims-files',
+  NotAuthorized: '/not-authorized',
 }
 
 export const MenuLinks = [
