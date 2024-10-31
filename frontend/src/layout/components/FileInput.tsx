@@ -1,7 +1,7 @@
 import { useForm } from '@mantine/form'
 import { FileInput, Container, Group, useMantineTheme } from '@mantine/core'
 import * as Papa from 'papaparse'
-import { useState, useCallback } from 'react'
+import { useCallback } from 'react'
 import { csvHeaderSchema, csvRowSchema } from '~/utils/zod/schema'
 import { TableHeader } from '~/common/constants'
 import useGlobalStore from '~/stores'
@@ -28,7 +28,7 @@ const FileUpload = ({ onChange }: FileUploadProps) => {
         console.error('No file selected')
         return
       }
-      setUploadFile({ isFileUploading: true, fileName: file?.name, currentfile: file })
+      setUploadFile({ fileName: file?.name, currentfile: file })
 
       const csvData = await new Promise((resolve, reject) => {
         const reader = new FileReader()
@@ -69,7 +69,6 @@ const FileUpload = ({ onChange }: FileUploadProps) => {
       })
 
       onChange(rowsByCollumn)
-      setUploadFile({ isFileUploading: false })
     } catch (error) {
       console.error(error)
     }

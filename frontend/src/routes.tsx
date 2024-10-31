@@ -51,11 +51,7 @@ const router = createBrowserRouter([
       },
       {
         path: ROUTES.ClaimsFiles,
-        element: (
-          <ProtectedRoute>
-            <ClaimsFilePage />
-          </ProtectedRoute>
-        ),
+        element: <ClaimsFilePage />,
       },
     ],
     errorElement: <NotFoundPage />,

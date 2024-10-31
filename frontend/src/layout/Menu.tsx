@@ -12,7 +12,7 @@ export default function Menu() {
     <a
       key={link.label}
       href={link.link}
-      className="mr-3"
+      className="mr-10"
       style={{ color: colors.royalGreen[0] }}
       data-active={active === link.link || undefined}
       onClick={(event) => {

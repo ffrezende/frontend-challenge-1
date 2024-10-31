@@ -4,7 +4,6 @@ import { useObserver } from 'mobx-react-lite'
 class GlobalStore {
   app = {
     name: 'Machine Readble',
-    isFileUploading: false,
     fileName: '',
     currentfile: null,
   }
