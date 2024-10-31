@@ -1,14 +1,14 @@
 import Papa from 'papaparse'
 import fs from 'fs'
 import type { OONRates } from '../common/interface/index.js'
-import { uploadFolder } from '../common/constants/index.js'
+import { UPLOAD_FOLDER } from '../common/constants/index.js'
 
 export const saveFile = async (filePath: string, data: string) => {
-  if (!fs.existsSync(uploadFolder)) {
-    fs.mkdirSync(uploadFolder, { recursive: true })
+  if (!fs.existsSync(UPLOAD_FOLDER)) {
+    fs.mkdirSync(UPLOAD_FOLDER, { recursive: true })
   }
 
-  fs.writeFile(`${uploadFolder}/${filePath.split('.')[0].replace(/\s/g, '')}-${Date.now()}.json`, data, (err) => {
+  fs.writeFile(`${UPLOAD_FOLDER}/${filePath.split('.')[0].replace(/\s/g, '')}-${Date.now()}.json`, data, (err) => {
     if (err) throw err
   })
 }
