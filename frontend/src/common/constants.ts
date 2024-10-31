@@ -6,6 +6,11 @@ export const ROUTES = {
   ClaimsFiles: '/claims-files',
 }
 
+export const MenuLinks = [
+  { link: ROUTES.UploadPage, label: 'Upload' },
+  { link: ROUTES.ClaimsFiles, label: 'Claims Files' },
+]
+
 export const SessionManagement = {
   AuthToken: 'auth_token',
 }
