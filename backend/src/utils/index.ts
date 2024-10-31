@@ -1,7 +1,9 @@
 import Papa from 'papaparse'
 import fs from 'fs'
-import type { OONRates } from '../common/interface/index.js'
+
 import { UPLOAD_FOLDER } from '../common/constants/index.js'
+import type { IOONRates } from '../common/interface/index.js'
+import { AllowedAmount, OONRates, OutOfNetwork, OutOfNetworkPayment, Plan, Provider, ReportingEntity } from '../model/index.js'
 
 export const saveFile = async (filePath: string, data: string) => {
   if (!fs.existsSync(UPLOAD_FOLDER)) {
@@ -21,16 +23,18 @@ export const generateMRF = async (file: File) => {
   const { data, errors } = Papa.parse(stringData, { header: false, skipEmptyLines: true })
   const header = data.shift()
 
-  const jsonMF = [] as Array<OONRates>
+  const jsonMF = [] as Array<IOONRates>
 
   data.forEach((row: any) => {
-    const tempRow: OONRates = {
-      reporting_entity: { reporting_entity_name: row[14], reporting_entity_type: row[15] },
-      last_updated_on: row[11],
-      out_of_network: { allowed_amounts: { billing_class: row[21], payments: { allowed_amount: row[5], providers: { billed_charge: row[4] } } } },
-      plan: { plan_name: row[18], plan_id: row[19] },
-    }
-    jsonMF.push(tempRow)
+    const reporting_entity = new ReportingEntity({ reporting_entity_name: row[14], reporting_entity_type: row[15] })
+    const provider = new Provider({ billed_charge: row[4] })
+    const outOfNetworkPayment = new OutOfNetworkPayment({ allowed_amount: row[5], providers: provider })
+    const allowedAmount = new AllowedAmount({ billing_class: row[21], payments: outOfNetworkPayment })
+    const out_of_network = new OutOfNetwork({ allowed_amounts: allowedAmount })
+    const plan = new Plan({ plan_name: row[18], plan_id: row[19] })
+    const tempOONRates = new OONRates({ last_updated_on: row[11], reporting_entity, out_of_network, plan })
+
+    jsonMF.push(tempOONRates)
   })
 
   return jsonMF
