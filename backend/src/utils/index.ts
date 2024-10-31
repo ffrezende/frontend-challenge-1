@@ -1,5 +1,17 @@
 import Papa from 'papaparse'
+import fs from 'fs'
 import type { OONRates } from '../common/interface/index.js'
+import { uploadFolder } from '../common/constants/index.js'
+
+export const saveFile = async (filePath: string, data: string) => {
+  if (!fs.existsSync(uploadFolder)) {
+    fs.mkdirSync(uploadFolder, { recursive: true })
+  }
+
+  fs.writeFile(`${uploadFolder}/${filePath.split('.')[0].replace(/\s/g, '')}-${Date.now()}.json`, data, (err) => {
+    if (err) throw err
+  })
+}
 
 export const generateMRF = async (file: File) => {
   const arr = await file.arrayBuffer()
@@ -19,7 +31,6 @@ export const generateMRF = async (file: File) => {
       plan: { plan_name: row[18], plan_id: row[19] },
     }
     jsonMF.push(tempRow)
-    console.log(row)
   })
 
   return jsonMF
