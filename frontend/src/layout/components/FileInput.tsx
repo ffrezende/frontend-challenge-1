@@ -1,85 +1,89 @@
 import { useForm } from '@mantine/form'
 import { FileInput, Container, Group, useMantineTheme } from '@mantine/core'
 import * as Papa from 'papaparse'
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { csvHeaderSchema, csvRowSchema } from '~/utils/zod/schema'
 import { TableHeader } from '~/common/constants'
 import useGlobalStore from '~/stores'
 
-//TODO create interface for csv headers
-interface Props {
-  onChange: ({ rows }) => any
+interface FileUploadProps {
+  onChange: (rows: any[]) => void
 }
 
-const FileUpload = ({ onChange }: Props) => {
+const FileUpload = ({ onChange }: FileUploadProps) => {
   const { colors } = useMantineTheme()
-  const [currentFile, setCurrentFile] = useState()
+  const [currentFile, setCurrentFile] = useState<File | null>(null)
   const { setUploadFile } = useGlobalStore()
 
   const form = useForm({
-    initialValues: {
-      file: null,
-    },
+    initialValues: { file: null },
   })
 
-  const onChangeFile = (file) => {
+  const handleFileChange = useCallback(async (file: File | null) => {
     try {
-      setUploadFile({ isFileUploading: true, fileName: file?.name })
       if (!file) {
         console.error('No file selected')
         return
       }
+      setUploadFile({ isFileUploading: true, fileName: file?.name })
       setCurrentFile(file)
-      const reader = new FileReader()
 
-      reader.onload = (e) => {
-        const csvData = e.target?.result
-        const { data, errors } = Papa.parse(csvData, { skipEmptyLines: true })
+      const csvData = await new Promise((resolve, reject) => {
+        const reader = new FileReader()
+        reader.onload = (e) => resolve(e.target?.result)
+        reader.onerror = reject
+        reader.readAsText(file)
+      })
 
-        const headers = data?.shift()
-        const { success, error } = csvHeaderSchema(headers)
+      const { data, errors } = Papa.parse(csvData, { skipEmptyLines: true })
 
-        if (!success) {
-          //create validation
-        }
+      const headers = data?.shift() as string[] // Type assertion for headers
+      const validatedHeaders = csvHeaderSchema(headers)
 
-        const tableHeader = TableHeader()
-        const rowsByCollumn = []
-
-        data.forEach((row) => {
-          const tempRow = {}
-          row.forEach((element, index) => {
-            const { field } = tableHeader[index]
-            tempRow[field] = element
-          })
-
-          const validationResult = csvRowSchema.safeParse(tempRow)
-
-          //create validation
-          rowsByCollumn.push(tempRow)
-        })
-
-        onChange({ rows: rowsByCollumn })
-        setUploadFile({ isFileUploading: false })
+      if (!validatedHeaders.success) {
+        console.error('Invalid CSV headers:', validatedHeaders.error)
+        return
       }
 
-      reader.readAsText(file)
+      const tableHeader = TableHeader()
+      const rowsByCollumn = []
+
+      data.forEach((row) => {
+        const tempRow = {}
+        row.forEach((element, index) => {
+          const { field } = tableHeader[index]
+          tempRow[field] = element
+        })
+
+        const validatedRow = csvRowSchema.safeParse(tempRow)
+
+        if (!validatedRow.success) {
+          // Handle row validation errors
+          console.error('Invalid CSV row:', validatedRow.error)
+          return null
+        }
+
+        rowsByCollumn.push(tempRow)
+      })
+
+      onChange(rowsByCollumn)
+      setUploadFile({ isFileUploading: false })
     } catch (error) {
-      console.log(error)
+      console.error(error)
     }
-  }
+  }, [])
 
   return (
     <Container size="md">
       <Group>
         <FileInput
           color={colors.royalGreen[5]}
-          w={'100%'}
+          w="100%"
           placeholder="Select a file"
           accept=".csv"
           error={form.errors.file}
           {...form.getInputProps('file')}
-          onChange={onChangeFile}
+          onChange={handleFileChange}
           value={currentFile}
         />
       </Group>

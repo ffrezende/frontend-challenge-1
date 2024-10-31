@@ -1,6 +1,6 @@
-import { postCsvFile } from '~/service'
+import { getClaimByName, postCsvFile } from '~/service'
 import useGlobalStore from '~/stores'
-import { createCSVString, formDataCSV } from '../file'
+import { createCSVString, downloadJsonFile, formDataCSV } from '../file'
 
 export default function useFileManagement() {
   const {
@@ -14,5 +14,10 @@ export default function useFileManagement() {
     const { message } = await postCsvFile(csvFile)
   }
 
-  return { handleSubmitFile }
+  const handleDownloadFile = async (fileName: string) => {
+    const claimFile = await getClaimByName(fileName)
+    downloadJsonFile(fileName, claimFile)
+  }
+
+  return { handleSubmitFile, handleDownloadFile }
 }

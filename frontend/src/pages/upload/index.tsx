@@ -19,7 +19,7 @@ export default function UploadPage() {
   const headers = TableHeader()
 
   const handleOnChange = (values) => {
-    const { rows } = values
+    const rows = values
     setRowData(rows)
   }
 

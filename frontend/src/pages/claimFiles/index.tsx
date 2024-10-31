@@ -1,8 +1,10 @@
 import { Button, Group, List, ListItem, Space, Text } from '@mantine/core'
 import useClaimFiles from '~/utils/hooks/useClaimFiles'
+import useFileManagement from '~/utils/hooks/useFileManagement'
 
 export default function ClaimsFilePage() {
-  const { files, handleDownloadFile } = useClaimFiles()
+  const { files } = useClaimFiles()
+  const { handleDownloadFile } = useFileManagement()
 
   return (
     <div>
