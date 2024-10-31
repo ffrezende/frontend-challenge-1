@@ -6,6 +6,7 @@ class GlobalStore {
     name: 'Machine Readble',
     isFileUploading: false,
     fileName: '',
+    currentfile: null,
   }
   auth = {
     isAuthenticated: false,

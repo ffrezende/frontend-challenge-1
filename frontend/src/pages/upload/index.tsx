@@ -10,6 +10,7 @@ import useFileManagement from '~/utils/hooks/useFileManagement'
 
 export default function UploadPage() {
   const [rowData, setRowData] = useState([])
+  const { setUploadFile } = useGlobalStore()
 
   const { handleSubmitFile } = useFileManagement()
 
@@ -27,9 +28,14 @@ export default function UploadPage() {
     await handleSubmitFile(CSVHeaders, rowData)
   }
 
+  const handleCancel = () => {
+    setRowData([])
+    setUploadFile({ currentfile: null })
+  }
+
   return (
     <Group align="center" justify="center" w={'100%'}>
-      <div className="mt-20 flex-col justify-center text-center items-center w-[300px]">
+      <div className="md:mt-14  flex-col justify-center text-center items-center w-[300px]">
         <div>Upload CSV File</div>
         <FileInput onChange={handleOnChange} />
       </div>
@@ -46,9 +52,18 @@ export default function UploadPage() {
                 filter: true,
               }}
             />
-            <Button onClick={handleSubmit} variant="outline">
-              Submit
-            </Button>
+            <div className="flex justify-center items-center mt-10 pb-20">
+              <div className="mr-8">
+                <Button onClick={handleCancel} variant="outline" w={100} color={'red'}>
+                  Cancel
+                </Button>
+              </div>
+              <div>
+                <Button onClick={handleSubmit} variant="outline" w={160}>
+                  Submit
+                </Button>
+              </div>
+            </div>
           </>
         )}
       </div>

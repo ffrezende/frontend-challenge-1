@@ -12,8 +12,11 @@ interface FileUploadProps {
 
 const FileUpload = ({ onChange }: FileUploadProps) => {
   const { colors } = useMantineTheme()
-  const [currentFile, setCurrentFile] = useState<File | null>(null)
-  const { setUploadFile } = useGlobalStore()
+
+  const {
+    setUploadFile,
+    app: { currentfile },
+  } = useGlobalStore()
 
   const form = useForm({
     initialValues: { file: null },
@@ -25,8 +28,7 @@ const FileUpload = ({ onChange }: FileUploadProps) => {
         console.error('No file selected')
         return
       }
-      setUploadFile({ isFileUploading: true, fileName: file?.name })
-      setCurrentFile(file)
+      setUploadFile({ isFileUploading: true, fileName: file?.name, currentfile: file })
 
       const csvData = await new Promise((resolve, reject) => {
         const reader = new FileReader()
@@ -84,7 +86,7 @@ const FileUpload = ({ onChange }: FileUploadProps) => {
           error={form.errors.file}
           {...form.getInputProps('file')}
           onChange={handleFileChange}
-          value={currentFile}
+          value={currentfile}
         />
       </Group>
     </Container>
