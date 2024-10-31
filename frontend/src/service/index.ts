@@ -1,4 +1,4 @@
-const BASE_URL = 'http://127.0.0.1:8080/'
+import { BASE_URL } from '~/common/constants'
 
 export const postCsvFile = async (csvFile: FormData) => {
   try {
@@ -12,5 +12,33 @@ export const postCsvFile = async (csvFile: FormData) => {
     }
 
     return await response.json()
+  } catch (error) {}
+}
+
+export const getListOfClaimFiles = async () => {
+  try {
+    const response = await fetch(`${BASE_URL}list-of-claim`)
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok')
+    }
+
+    const { files } = await response.json()
+
+    return files
+  } catch (error) {}
+}
+
+export const getClaimByName = async (fileName: string) => {
+  try {
+    const response = await fetch(`${BASE_URL}claim/${fileName}`)
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok')
+    }
+
+    const claimFile = await response.json()
+
+    return claimFile
   } catch (error) {}
 }
