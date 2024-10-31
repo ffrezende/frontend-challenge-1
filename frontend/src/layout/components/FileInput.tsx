@@ -44,11 +44,10 @@ const FileUpload = ({ onChange }: Props) => {
         }
 
         const tableHeader = TableHeader()
-        const rowByCollumn = []
+        const rowsByCollumn = []
 
         data.forEach((row) => {
           const tempRow = {}
-
           row.forEach((element, index) => {
             const { field } = tableHeader[index]
             tempRow[field] = element
@@ -57,10 +56,10 @@ const FileUpload = ({ onChange }: Props) => {
           const validationResult = csvRowSchema.safeParse(tempRow)
 
           //create validation
-          rowByCollumn.push(tempRow)
+          rowsByCollumn.push(tempRow)
         })
 
-        onChange({ rows: rowByCollumn })
+        onChange({ rows: rowsByCollumn })
         setUploadFile({ isFileUploading: false })
       }
 

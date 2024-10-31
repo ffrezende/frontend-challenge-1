@@ -17,9 +17,9 @@ export enum BillingCodeStandard {
   CDT = 'CDT',
 }
 
-export enum BillingClass {
-  Professional = 'professional',
-  Institutional = 'institutional',
+export enum Billing {
+  Professional = 'Professional',
+  Institutional = 'Institutional',
 }
 
 export enum PlaceOfService {

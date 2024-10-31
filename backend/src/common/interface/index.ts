@@ -1,4 +1,4 @@
-import type { BillingClass, BillingCodeStandard } from '../enum/index.js'
+import type { Billing, BillingCodeStandard } from '../enum/index.js'
 
 interface ReportingEntity {
   reporting_entity_name: string
@@ -19,35 +19,35 @@ interface TaxIdentifier {
 
 interface Provider {
   billed_charge: number
-  npi: string[]
+  npi?: string[]
 }
 
 interface OutOfNetworkPayment {
   allowed_amount: number
-  billing_code_modifier?: string[]
-  providers: Provider[]
+  billing_code_modifier?: string
+  providers: Provider
 }
 
 interface AllowedAmount {
-  tin: TaxIdentifier
-  service_code?: string[]
-  billing_class: BillingClass
-  payments: OutOfNetworkPayment[]
+  tin?: TaxIdentifier
+  service_code?: string
+  billing_class: Billing
+  payments: OutOfNetworkPayment
 }
 
 interface OutOfNetwork {
-  name: string
-  billing_code_type: BillingCodeStandard
-  billing_code: string
-  billing_code_type_version: string
-  description: string
-  allowed_amounts: AllowedAmount[]
+  name?: string
+  billing_code_type?: BillingCodeStandard
+  billing_code?: string
+  billing_code_type_version?: string
+  description?: string
+  allowed_amounts?: AllowedAmount
 }
 
-interface OONRates {
+export interface OONRates {
   reporting_entity: ReportingEntity
   plan?: Plan
-  out_of_network: OutOfNetwork[]
+  out_of_network: OutOfNetwork
   last_updated_on: string
-  version: string
+  version?: string
 }

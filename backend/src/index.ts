@@ -3,6 +3,7 @@ import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 
 import fs from 'fs'
+import { generateMRF } from './utils/index.js'
 
 const uploadFolder = 'uploads'
 
@@ -22,9 +23,10 @@ app.post('/upload', async (c) => {
       fs.mkdirSync(uploadFolder, { recursive: true })
     }
 
-    const arr = await file.arrayBuffer()
+    const OONRates = await generateMRF(file)
+    const jsonString = JSON.stringify(OONRates)
 
-    fs.writeFile(`${uploadFolder}/${file.name}`, Buffer.from(arr), (err) => {
+    fs.writeFile(`${uploadFolder}/${file.name.split('.')[0]}.json`, jsonString, (err) => {
       if (err) throw err
     })
 
