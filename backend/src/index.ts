@@ -32,7 +32,7 @@ app.post('/upload', async (c) => {
   }
 })
 
-app.get('/list-files', async (c) => {
+app.get('/list-of-claim', async (c) => {
   try {
     const files = await readdir(uploadFolder)
 
@@ -43,7 +43,7 @@ app.get('/list-files', async (c) => {
   }
 })
 
-app.get('/file/:filename', async (c) => {
+app.get('/claim/:filename', async (c) => {
   const filename = c.req.param('filename')
   const filePath = `./uploads/${filename}` // Adjust the path as needed
 
